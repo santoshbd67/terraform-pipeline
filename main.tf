@@ -20,40 +20,16 @@ resource "aws_subnet" "example_subnet" {
   }
 }
 
-resource "aws_security_group" "example_sg" {
-  name        = "${var.environment}-sg"
-  vpc_id      = aws_vpc.example_vpc.id
-  description = "Allow SSH access"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.environment}-sg"
-  }
-}
-
 resource "aws_instance" "example_instance" {
   ami           = var.ami
   instance_type = var.instance_type
   subnet_id     = aws_subnet.example_subnet.id
 
-  # Correcting this to use security_groups (name of the security group)
-  security_groups = [aws_security_group.example_sg.name]
+  # Use the default security group by not specifying any security group
+  security_groups = []  # This will use the default security group
 
   tags = {
-    Name = "${var.environment}-instance"
+    Name        = "${var.environment}-instance"
     Environment = var.environment
   }
 }
