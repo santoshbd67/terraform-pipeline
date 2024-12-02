@@ -48,7 +48,9 @@ resource "aws_instance" "example_instance" {
   ami           = var.ami
   instance_type = var.instance_type
   subnet_id     = aws_subnet.example_subnet.id
-  security_groups = [aws_security_group.example_sg.name]  # Use security group name
+
+  # Correcting this to use security_group_ids
+  security_group_ids = [aws_security_group.example_sg.id]
 
   tags = {
     Name = "${var.environment}-instance"
